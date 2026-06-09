@@ -1,0 +1,12 @@
+{
+  "generated_at": "2026-06-09T18:17:18",
+  "latest_date": "2026-06-09",
+  "p_normal": 0.9817,
+  "p_high_volatility": 0.0183,
+  "current_regime": "normal",
+  "recommendation": "INVESTED",
+  "hysteresis_rules": {
+    "enter_cash": "P(high_vol) >= 0.60 for 3 consecutive days",
+    "enter_invested": "P(high_vol) <= 0.40 for 3 consecutive days"
+  }
+}
