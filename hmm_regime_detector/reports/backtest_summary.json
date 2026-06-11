@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-06-09T18:18:21",
+  "generated_at": "2026-06-09T20:23:08",
   "stats": {
     "bh_cagr": 0.109501,
     "hmm_cagr": 0.084842,
@@ -7,7 +7,7 @@
     "hmm_volatility": 0.092554,
     "bh_sharpe": 0.576814,
     "hmm_sharpe": 0.916676,
-    "bh_max_drawdown": 0.551894,
+    "bh_max_drawdown": 0.551895,
     "hmm_max_drawdown": 0.155176,
     "pct_days_invested": 0.672189
   }

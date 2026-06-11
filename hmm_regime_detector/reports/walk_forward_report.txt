@@ -1,0 +1,71 @@
+========================================================================
+  WALK-FORWARD VALIDATION REPORT  (v1.2)
+========================================================================
+  Generated : 2026-06-09T22:28:31
+  Design    : expanding window from 2005-02-01
+  Initial train end : 2014-12-31
+  Test years        : 2015 → 2026
+  Signal shift      : 1 trading day (no look-ahead)
+
+AGGREGATE WALK-FORWARD METRICS  (stitched OOS path)
+------------------------------------------------------------------------
+  Period            : 2015-01-02 → 2026-06-09
+  Trading days      : 2875
+
+  Buy & Hold:
+    CAGR            : 13.79%
+    Volatility      : 17.63%
+    Sharpe          : 0.782
+    Max Drawdown    : 33.72%
+    Total Return    : 336.45%
+
+  HMM Overlay:
+    CAGR            : 7.93%
+    Volatility      : 9.19%
+    Sharpe          : 0.863
+    Max Drawdown    : 14.05%
+    Total Return    : 138.83%
+    % Days Invested : 65.7%
+    Regime Switches : 51
+
+VALIDATION QUESTIONS
+------------------------------------------------------------------------
+
+1. Does the HMM reduce drawdowns in walk-forward?
+   YES — aggregate Max DD falls from 33.72% to 14.05% (reduction 19.67%).
+   8/12 test years show lower HMM drawdown.
+
+2. Does it improve Sharpe?
+   YES — aggregate Sharpe 0.782 → 0.863 (Δ +0.081).
+   3/12 years with higher HMM Sharpe.
+
+3. How much CAGR is sacrificed?
+   Aggregate CAGR cost: 5.86% (13.79% → 7.93%).
+   Median yearly CAGR cost: 8.14%.
+
+4. In which years does it help most?
+   Best Sharpe improvement : 2025 (Δ Sharpe +0.491, DD reduction 13.46%)
+   Best DD reduction     : 2020 (Max DD 33.72% → 7.93%)
+
+5. In which years does it hurt most?
+   Worst Sharpe delta      : 2020 (Δ Sharpe -1.176, CAGR cost 21.26%)
+   Smallest DD benefit     : 2024 (DD reduction -2.13%)
+
+6. Does behavior remain economically interpretable?
+   YES — high avg P(high_vol) aligns with stress years (2020, 2022, 2025).
+   Crisis-state index remains stable (mostly state 1) across folds.
+   Regime switches are infrequent (median 4 per year), consistent with hysteresis.
+
+7. Does the model still detect COVID, 2022, SVB 2023 and 2025 tariff vol?
+   2020 COVID crisis (test 2020, train→2019): avg P(hv)=0.863, pct invested=15.0% — DETECTED
+   2022 bear market (test 2022, train→2021): avg P(hv)=0.961, pct invested=5.2% — DETECTED
+   March 2023 SVB episode (test 2023, train→2022): avg P(hv)=0.156, pct invested=83.2% — WEAK / NOT DETECTED
+   2025 tariff volatility episode (test 2025, train→2024): avg P(hv)=0.322, pct invested=68.0% — WEAK / NOT DETECTED
+
+METHODOLOGY
+------------------------------------------------------------------------
+  • Expanding window: retrain through Y-1, test year Y.
+  • No parameter tuning; fixed HMM hyperparameters and hysteresis.
+  • Strategy signal shifted 1 day before return calculation.
+
+========================================================================

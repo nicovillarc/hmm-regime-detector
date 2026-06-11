@@ -1,24 +1,24 @@
 #!/usr/bin/env python3
 """
-Train the HMM regime detector on historical SPY / VIX data.
+Run walk-forward validation (v1.2).
+
+Expanding-window retraining with one-year test folds from 2015 onward.
+Strategy returns use a one-day signal shift.
 
 Usage
 -----
-    python train.py
+    python scripts/run_walk_forward.py
 """
 
 from __future__ import annotations
 
 import logging
-import sys
-from pathlib import Path
 
-# Ensure project root is on sys.path when run as a script.
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _bootstrap import PROJECT_ROOT  # noqa: F401 — sets sys.path
 
 from src.data_loader import download_market_data
 from src.features import build_features
-from src.model import HMMRegimeDetector
+from src.walk_forward import run_walk_forward
 
 logging.basicConfig(
     level=logging.INFO,
@@ -29,16 +29,11 @@ logger = logging.getLogger(__name__)
 
 
 def main() -> None:
-    logger.info("=== HMM Regime Detector — Training ===")
+    logger.info("=== HMM Regime Detector — Walk-Forward Validation (v1.2) ===")
 
     market_data = download_market_data()
     features = build_features(market_data)
-
-    detector = HMMRegimeDetector()
-    detector.fit(features)
-    detector.save()
-
-    logger.info("Training complete. Model saved to data/hmm_model.pkl")
+    run_walk_forward(features)
 
 
 if __name__ == "__main__":

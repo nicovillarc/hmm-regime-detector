@@ -7,17 +7,17 @@ to reports/latest_report.json.
 
 Usage
 -----
-    python predict_today.py
+    python scripts/predict_today.py
 """
 
 from __future__ import annotations
 
 import logging
 import sys
-from pathlib import Path
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _bootstrap import PROJECT_ROOT  # noqa: F401 — sets sys.path
 
+from src.config import MODEL_PATH
 from src.data_loader import download_market_data
 from src.features import build_features
 from src.model import HMMRegimeDetector
@@ -34,9 +34,8 @@ logger = logging.getLogger(__name__)
 def main() -> None:
     logger.info("=== HMM Regime Detector — Daily Prediction ===")
 
-    model_path = Path(__file__).resolve().parent / "data" / "hmm_model.pkl"
-    if not model_path.exists():
-        logger.error("Model not found. Run train.py first.")
+    if not MODEL_PATH.exists():
+        logger.error("Model not found. Run src/train.py first.")
         sys.exit(1)
 
     market_data = download_market_data()

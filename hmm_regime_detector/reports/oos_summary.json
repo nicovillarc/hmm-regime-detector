@@ -1,0 +1,23 @@
+{
+  "version": "1.1",
+  "period": "out_of_sample",
+  "start_date": "2019-01-02",
+  "end_date": "2026-06-09",
+  "trading_days": 1869,
+  "generated_at": "2026-06-09T21:41:04",
+  "buy_and_hold": {
+    "cagr": 0.173928,
+    "annualized_volatility": 0.194696,
+    "sharpe_ratio": 0.893333,
+    "max_drawdown": 0.337172,
+    "total_return": 2.284793
+  },
+  "hmm_overlay": {
+    "cagr": 0.094999,
+    "annualized_volatility": 0.07965,
+    "sharpe_ratio": 1.192699,
+    "max_drawdown": 0.08901,
+    "pct_days_invested": 0.498662,
+    "total_return": 0.960278
+  }
+}

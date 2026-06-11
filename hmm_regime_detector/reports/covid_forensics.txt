@@ -1,0 +1,80 @@
+========================================================================
+  COVID FORENSICS REPORT  (v1.0.3)
+========================================================================
+  Generated    : 2026-06-09T20:23:08
+  Focus period : 2020-01-01 → 2021-06-30
+  Main episode : 2020-02-24 → 2021-03-24
+  Focus days   : 377
+  Episode days : 274
+
+PROBABILITY THRESHOLD TIMELINE  (focus period)
+------------------------------------------------------------------------
+  P(high_vol) first ≥ 0.60 : 2020-02-24
+  P(high_vol) first ≥ 0.90 : 2020-02-24
+  P(high_vol) first < 0.60 : 2020-11-30  (after first ≥ 0.60)
+  P(high_vol) first < 0.40 : 2021-03-25  (after first ≥ 0.60)
+
+VITERBI REGIME SWITCHES  (focus period)
+------------------------------------------------------------------------
+  First Viterbi → High Vol : 2020-02-24
+  First Viterbi → Normal   : 2021-03-25  (after entering high vol)
+
+  All transitions in focus period:
+  2020-02-24: normal → high_volatility  (P(hv)=1.000, VIX=25.0)
+  2021-03-25: high_volatility → normal  (P(hv)=0.287, VIX=19.8)
+
+EPISODE EXTREMES  (main episode)
+------------------------------------------------------------------------
+  Maximum VIX  : 82.69  on 2020-03-16
+  Maximum RV20 : 0.9392  on 2020-03-27
+
+SUBPERIOD AVERAGES  (focus period)
+------------------------------------------------------------------------
+  Subperiod         Avg VIX  Avg RV20  Avg P(hv)   Days
+  ---------------- -------- --------- ---------- ------
+  Feb–Mar 2020        40.08    0.4358     0.6603     41
+  Apr–Jun 2020        34.49    0.3897     1.0000     63
+  Jul–Sep 2020        25.81    0.1721     0.9999     64
+  Oct–Dec 2020        25.62    0.1725     0.9308     64
+  Jan–Mar 2021        23.20    0.1519     0.8095     61
+
+WHY DID THE MODEL REMAIN IN HIGH VOLATILITY?
+------------------------------------------------------------------------
+  The model remained in the high-volatility Viterbi state for 274 trading
+  days (2020-02-24 → 2021-03-24).  Four mechanisms reinforced
+  this persistence:
+
+  1. VIX STAYING ELEVATED
+     Episode average VIX: 30.0  (normal-state mean ≈ 15)
+     Days with VIX ≥ 25 : 60.9% of episode
+     Days with VIX ≥ 30 : 30.7% of episode
+     VIX fell from 40.1 (Feb–Mar) to 25.8 (Jul–Sep) but remained above the normal-state emission mean throughout.
+
+  2. RV20 STAYING ELEVATED
+     Episode average RV20: 0.2594  (normal-state mean ≈ 0.108)
+     Days with RV20 ≥ 0.25: 28.1% of episode
+     RV20 averaged 0.4358 in Feb–Mar 2020 and still 0.1519 in Jan–Mar 2021.  The 20-day rolling window kept realised vol elevated long after spot VIX declined, continuously pulling the HMM toward the high-vol emission state.
+
+  3. MARKOV TRANSITION PERSISTENCE
+     P(High Vol → High Vol) = 0.9814
+     Implied expected duration = 53.8 trading days
+     Once Viterbi enters the high-vol state, the transition matrix
+     strongly favours staying.  Combined with elevated emissions (RV20
+     + log(VIX)), the decoder rarely switches back even when VIX moderates.
+     Episode average P(high_vol) = 0.958; 88.7% of days had P ≥ 0.90.
+
+  4. HYSTERESIS LOGIC
+     Strategy was in CASH on 272 episode days, INVESTED on 2.
+     94.5% of episode days had P(high_vol) ≥ 0.60.
+     Hysteresis requires P ≤ 0.40 for 3 consecutive days to re-enter.
+     During Jul–Dec 2020, P(high_vol) mostly stayed in the 0.85–1.0 range
+     (avg P(hv) ≈ 0.97), so the strategy remained in CASH long after the initial crash.
+
+  CONCLUSION
+  Persistence was driven primarily by RV20 lag (realised vol memory) and
+  the HMM's high self-transition probability, not by VIX alone.  VIX
+  normalised after Jun 2020, but RV20 and posterior probabilities stayed
+  in the high-vol regime until early 2021 when realised vol finally
+  subsided enough for Viterbi to switch back to Normal.
+
+========================================================================

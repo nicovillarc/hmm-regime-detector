@@ -1,88 +1,286 @@
-# HMM Regime Detector
+# Hidden Markov Models for Risk Regime Detection in Equity Markets
 
-A production-style **Hidden Markov Model** regime detector for the US equity market. The model infers whether the market is in a **normal volatility** or **high volatility / crisis** regime using daily SPY and VIX data — it does **not** predict returns.
+A Gaussian Hidden Markov Model (HMM) for identifying market stress regimes in US equities using SPY returns, realized volatility and the VIX.
+
+The model is designed as a **risk overlay**, not as a return prediction system.
+
+---
+
+## Abstract
+
+This project develops an interpretable Gaussian Hidden Markov Model (HMM) to identify normal and high-volatility market regimes in US equities.
+
+Using daily SPY returns, 20-day realized volatility and the logarithm of the VIX, the model classifies hidden states and applies a risk overlay that reduces drawdowns during major stress periods.
+
+The model was validated through:
+
+- Full-sample analysis (2005–2026)
+- Strict In-Sample / Out-of-Sample validation
+- Walk-forward expanding-window validation
+
+Results show substantial drawdown reduction and improved risk-adjusted returns, while preserving economic interpretability.
+
+---
+
+## Overview
+
+![Regime Detection](figures/regime_analysis.png)
+
+---
+
+# Key Contributions
+
+- Interpretable Gaussian Hidden Markov Model.
+- Major crises correctly identified.
+- Strict In-Sample / Out-of-Sample validation.
+- Walk-forward expanding-window validation.
+- Significant drawdown reduction.
+- Improved risk-adjusted performance.
+
+---
 
 ## Features
 
-| Feature | Description |
-|---|---|
-| `spy_log_return` | Daily log return of SPY |
-| `spy_realized_vol` | 20-day rolling std of log returns × √252 (annualised) |
-| `log_vix` | Natural log of the VIX index level |
+The model uses three daily features:
+
+### 1. SPY Log Returns
+
+```math
+r_t=\ln\left(\frac{P_t}{P_{t-1}}\right)
+```
+
+### 2. 20-Day Realized Volatility
+
+```math
+RV_{20}=\sigma_{20}(r)\sqrt{252}
+```
+
+### 3. Logarithm of the VIX
+
+```math
+\log(VIX)
+```
+
+---
 
 ## Model
 
-- **Gaussian HMM** with 2 hidden states
-- `covariance_type="full"`, `n_iter=1000`, `random_state=42`
-- Features standardised with `StandardScaler` before fitting
-- Crisis state identified as the state with the highest combined average of realised volatility and log(VIX) on original (non-scaled) data
+Gaussian Hidden Markov Model
 
-## Regime Decision Logic
-
-Posterior probabilities are computed via `model.predict_proba()`. Position recommendations use **hysteresis** to avoid whipsawing:
-
-| Action | Condition |
-|---|---|
-| Switch to **CASH** | P(high vol) ≥ 0.60 for **3 consecutive days** |
-| Switch to **INVESTED** | P(high vol) ≤ 0.40 for **3 consecutive days** |
-
-## Project Structure
-
-```
-hmm_regime_detector/
-├── data/                  # Downloaded data & saved model
-├── reports/               # JSON reports & plots
-├── src/
-│   ├── config.py          # Central configuration
-│   ├── data_loader.py     # yfinance data download
-│   ├── features.py        # Feature engineering
-│   ├── model.py           # HMM training & inference
-│   ├── backtest.py        # Strategy backtest engine
-│   └── report.py          # Report generation & plots
-├── train.py               # Train and save the model
-├── predict_today.py       # Daily regime report
-├── run_backtest.py        # Full backtest + plots
-├── requirements.txt
-└── README.md
+```python
+GaussianHMM(
+    n_components=2,
+    covariance_type="full",
+    n_iter=1000,
+    random_state=42
+)
 ```
 
-## Quick Start
+The model infers two hidden states:
 
-```bash
-# 1. Install dependencies
-pip install -r requirements.txt
+- Normal volatility regime
+- High-volatility / crisis regime
 
-# 2. Train the model (downloads data, fits HMM, saves to data/)
-python train.py
+Features are standardized using StandardScaler before fitting.
 
-# 3. Get today's regime recommendation
-python predict_today.py
+---
 
-# 4. Run backtest and generate plots
-python run_backtest.py
+## State Identification
+
+The crisis state is defined as the state with the highest combined average:
+
+- Realized volatility
+- log(VIX)
+
+using original (non-scaled) feature values.
+
+---
+
+## Risk Overlay
+
+The model does not predict returns.
+
+Instead, it acts as a risk management overlay.
+
+### Hysteresis
+
+Switch to CASH if:
+
+```text
+P(high volatility) ≥ 0.60
+for 3 consecutive days
 ```
 
-## Output
+Switch back to INVESTED if:
 
-### Daily Report (`reports/latest_report.json`)
-
-```json
-{
-  "latest_date": "2026-06-06",
-  "p_normal": 0.8234,
-  "p_high_volatility": 0.1766,
-  "current_regime": "normal",
-  "recommendation": "INVESTED"
-}
+```text
+P(high volatility) ≤ 0.40
+for 3 consecutive days
 ```
 
-### Backtest Plots (`reports/regime_analysis.png`)
+---
 
-Three-panel chart:
-1. **SPY price** with normal / crisis regime shading
-2. **P(high volatility)** through time with hysteresis thresholds
-3. **Equity curves** — buy-and-hold SPY vs. HMM risk overlay
+# Validation
 
-## Disclaimer
+## v1.0 — Full Sample
 
-This project is for **educational and research purposes only**. It is not financial advice. Past performance of any strategy does not guarantee future results.
+Period:
+
+2005–2026
+
+Purpose:
+
+- Interpretability
+- Regime diagnostics
+
+---
+
+## v1.1 — Strict IS/OOS
+
+Training:
+
+2005–2018
+
+Testing:
+
+2019–2026
+
+No retraining.
+
+No parameter optimization.
+
+---
+
+## v1.2 — Walk-Forward Validation
+
+Expanding-window approach:
+
+Train → year t−1
+
+Test → year t
+
+Signal shifted by one day to avoid look-ahead bias.
+
+---
+
+# Main Results
+
+## Drawdown Reduction
+
+| Framework | Buy & Hold Max DD | HMM Max DD |
+|------------|----------------:|------------:|
+| Full Sample | 55.2% | 15.5% |
+| OOS | 33.7% | 8.9% |
+| Walk-Forward | 33.7% | 14.1% |
+
+---
+
+## Walk-Forward Performance
+
+| Metric | Buy & Hold | HMM |
+|----------|-----------:|-----------:|
+| CAGR | 13.79% | 7.93% |
+| Volatility | 17.63% | 9.19% |
+| Sharpe | 0.782 | 0.863 |
+| Max Drawdown | 33.72% | 14.05% |
+| Total Return | 336% | 139% |
+
+---
+
+# Selected Figures
+
+## High Volatility Occupancy by Year
+
+![Occupancy](figures/high_volatility_by_year.png)
+
+---
+
+## COVID Forensics
+
+![COVID](figures/covid_forensics.png)
+
+---
+
+## Walk-Forward Equity Curves
+
+![WF Equity](figures/walk_forward_equity_curve.png)
+
+---
+
+## Walk-Forward Drawdowns
+
+![WF Drawdowns](figures/walk_forward_drawdowns.png)
+
+---
+
+# Key Findings
+
+- Major crises such as 2008, COVID and the 2022 bear market are correctly identified.
+- Drawdowns are substantially reduced.
+- Risk-adjusted performance improves.
+- Results generalize out of sample.
+- The model remains robust under walk-forward validation.
+- The model detects persistent turbulence rather than short-lived crashes.
+
+---
+
+# Limitations
+
+This model is designed to detect risk regimes.
+
+It is **not** intended to:
+
+- predict returns;
+- optimize re-entry timing;
+- maximize CAGR.
+
+The current framework sacrifices return in exchange for lower drawdowns and improved risk-adjusted performance.
+
+---
+
+# Future Work
+
+- Re-entry engine
+- Dynamic exposure allocation
+- Multi-state Hidden Markov Models
+- Portfolio overlays
+- Regime-aware portfolio optimization
+
+---
+
+# Repository Structure
+
+```text
+src/
+scripts/
+data/
+reports/
+figures/
+docs/
+paper/
+linkedin/
+presentation/
+```
+
+---
+
+# References
+
+- Hamilton, J. D. (1989)
+- Rabiner, L. R. (1989)
+- Ernest P. Chan (2017)
+- hmmlearn
+- yfinance
+- scikit-learn
+
+---
+
+# License
+
+MIT License.
+
+---
+
+### Current Scientific Version
+
+**v1.2 — Walk-Forward Validated Gaussian HMM Regime Detector**

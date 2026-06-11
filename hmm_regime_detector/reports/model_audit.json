@@ -1,0 +1,149 @@
+{
+  "version": "1.0.1",
+  "report_type": "model_interpretability_audit",
+  "generated_at": "2026-06-09T20:23:08",
+  "sample_period": {
+    "start": "2005-02-01",
+    "end": "2026-06-09",
+    "n_observations": 5372
+  },
+  "state_mapping": {
+    "normal_state_index": 0,
+    "high_volatility_state_index": 1,
+    "crisis_identification_rule": "State with highest combined average of RV20 + log(VIX) on original (non-scaled) features under Viterbi decoding."
+  },
+  "state_means_original": {
+    "normal": {
+      "spy_log_return": 0.00075549,
+      "spy_realized_vol": 0.10841569,
+      "log_vix": 2.68544396
+    },
+    "high_volatility": {
+      "spy_log_return": -0.00028973,
+      "spy_realized_vol": 0.25449528,
+      "log_vix": 3.28212231
+    }
+  },
+  "state_covariances_scaled": {
+    "normal": [
+      [
+        0.3136511972662525,
+        0.007136406851696597,
+        -0.052516316014885996
+      ],
+      [
+        0.007136406851696597,
+        0.09325987936949431,
+        0.09310020224738287
+      ],
+      [
+        -0.052516316014885975,
+        0.09310020224738287,
+        0.2844943406110317
+      ]
+    ],
+    "high_volatility": [
+      [
+        2.406343938760908,
+        0.03513858428861252,
+        -0.20529465789039963
+      ],
+      [
+        0.03513858428861252,
+        1.6832574983608455,
+        0.7831412550144135
+      ],
+      [
+        -0.2052946578903996,
+        0.7831412550144135,
+        0.6283958573492088
+      ]
+    ]
+  },
+  "state_covariances_original": {
+    "normal": [
+      [
+        4.491084029017869e-05,
+        9.413799751242755e-06,
+        -0.00022655343330710496
+      ],
+      [
+        9.413799751242757e-06,
+        0.0011333428961436112,
+        0.003700054683578589
+      ],
+      [
+        -0.00022655343330710482,
+        0.0037000546835785886,
+        0.036976192612588124
+      ]
+    ],
+    "high_volatility": [
+      [
+        0.00034455767827084466,
+        4.6352121299883894e-05,
+        -0.0008856335157152692
+      ],
+      [
+        4.6352121299883894e-05,
+        0.020455826675363997,
+        0.031124158686789003
+      ],
+      [
+        -0.0008856335157152691,
+        0.031124158686789,
+        0.0816736326226793
+      ]
+    ]
+  },
+  "transition_matrix": {
+    "normal_to_normal": 0.990947,
+    "normal_to_high_vol": 0.009053,
+    "high_vol_to_normal": 0.018602,
+    "high_vol_to_high_vol": 0.981398
+  },
+  "transition_matrix_raw": {
+    "states_order": [
+      0,
+      1
+    ],
+    "matrix": [
+      [
+        0.9909469457738306,
+        0.009053054226169503
+      ],
+      [
+        0.01860229086340929,
+        0.9813977091365906
+      ]
+    ]
+  },
+  "expected_duration_days": {
+    "normal": 110.46,
+    "high_volatility": 53.76
+  },
+  "regime_assignments": {
+    "normal": {
+      "count": 3625,
+      "pct": 0.674795
+    },
+    "high_volatility": {
+      "count": 1747,
+      "pct": 0.325205
+    }
+  },
+  "regime_statistics": {
+    "normal": {
+      "avg_spy_log_return": 0.00075874,
+      "avg_rv20": 0.10829603,
+      "avg_log_vix": 2.68640251,
+      "avg_vix": 14.9556
+    },
+    "high_volatility": {
+      "avg_spy_log_return": -0.0003028,
+      "avg_rv20": 0.25562768,
+      "avg_log_vix": 3.28374496,
+      "avg_vix": 27.9293
+    }
+  }
+}

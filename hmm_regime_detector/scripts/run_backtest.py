@@ -7,23 +7,26 @@ hysteresis, and produces plots + summary statistics.
 
 Usage
 -----
-    python run_backtest.py
+    python scripts/run_backtest.py
 """
 
 from __future__ import annotations
 
 import logging
-import sys
-from pathlib import Path
 
 import pandas as pd
 
-sys.path.insert(0, str(Path(__file__).resolve().parent))
+from _bootstrap import PROJECT_ROOT
 
 from src.backtest import run_backtest
 from src.data_loader import download_market_data
 from src.features import build_features
 from src.model import HMMRegimeDetector
+from src.covid_forensics import run_covid_forensics
+from src.covid_oos_forensics import run_covid_oos_forensics
+from src.is_oos_validation import run_is_oos_validation
+from src.model_audit import run_model_audit
+from src.regime_diagnostics import run_regime_diagnostics
 from src.report import plot_regime_analysis, save_backtest_summary
 
 logging.basicConfig(
@@ -40,7 +43,7 @@ def main() -> None:
     market_data = download_market_data()
     features = build_features(market_data)
 
-    model_path = Path(__file__).resolve().parent / "data" / "hmm_model.pkl"
+    model_path = PROJECT_ROOT / "data" / "hmm_model.pkl"
     if model_path.exists():
         detector = HMMRegimeDetector.load()
         logger.info("Loaded existing model.")
@@ -72,6 +75,11 @@ def main() -> None:
         backtest_result=backtest_result,
     )
     save_backtest_summary(backtest_result)
+    run_model_audit(detector, features)
+    run_regime_diagnostics(detector, features, regime_result)
+    run_covid_forensics(detector, features, regime_result)
+    run_is_oos_validation(features)
+    run_covid_oos_forensics(features)
 
     stats = backtest_result.stats
     print("\n--- Backtest Summary ---")

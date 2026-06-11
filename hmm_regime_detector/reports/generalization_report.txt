@@ -1,0 +1,85 @@
+========================================================================
+  GENERALIZATION REPORT  (v1.1 — Strict IS/OOS Validation)
+========================================================================
+  Generated       : 2026-06-09T21:41:04
+  IS period       : 2005-02-01 → 2018-12-31
+  OOS period      : 2019-01-02 → 2026-06-09
+  Crisis state    : index 1 (identified on IS only)
+  Normal state    : index 0
+
+1. IN-SAMPLE METRICS
+------------------------------------------------------------------------
+  Buy & Hold:
+    CAGR               : 7.65%
+    Annualized Vol     : 18.72%
+    Sharpe Ratio       : 0.409
+    Max Drawdown       : 55.19%
+    Total Return       : 178.64%
+
+  HMM Overlay:
+    CAGR               : 5.19%
+    Annualized Vol     : 8.47%
+    Sharpe Ratio       : 0.614
+    Max Drawdown       : 15.52%
+    Total Return       : 102.18%
+    % Days Invested    : 63.1%
+
+2. OUT-OF-SAMPLE METRICS
+------------------------------------------------------------------------
+  Buy & Hold:
+    CAGR               : 17.39%
+    Annualized Vol     : 19.47%
+    Sharpe Ratio       : 0.893
+    Max Drawdown       : 33.72%
+    Total Return       : 228.48%
+
+  HMM Overlay:
+    CAGR               : 9.50%
+    Annualized Vol     : 7.96%
+    Sharpe Ratio       : 1.193
+    Max Drawdown       : 8.90%
+    Total Return       : 96.03%
+    % Days Invested    : 49.9%
+
+3. IS vs OOS COMPARISON  (Buy & Hold vs HMM Overlay)
+------------------------------------------------------------------------
+  IS  — Max DD reduction (BH → HMM): +39.67%  |  CAGR cost: +2.46%
+  OOS — Max DD reduction (BH → HMM): +24.82%  |  CAGR cost: +7.89%
+
+  IS  — HMM Sharpe vs BH: 0.614 vs 0.409
+  OOS — HMM Sharpe vs BH: 1.193 vs 0.893
+
+4. DOES THE MODEL GENERALIZE?
+------------------------------------------------------------------------
+  The structure learned on IS does translate to drawdown protection OOS.
+  IS Max DD reduction  : 39.67%
+  OOS Max DD reduction : 24.82%
+  OOS HMM/BH drawdown ratio: 0.26
+
+  VERDICT: The model generalizes in its primary design goal — reducing tail risk — although CAGR is sacrificed in both periods.  OOS Sharpe improves relative to buy-and-hold.
+
+5. ECONOMIC INTERPRETABILITY
+------------------------------------------------------------------------
+  Regime assignments OOS remain driven by the same features (RV20, log VIX)
+  learned during IS.  High-vol state emission means were fixed at training;
+  OOS observations are scored against those IS-learned distributions.
+
+  IS-identified crisis state: index 1
+  P(High Vol → High Vol)   : 0.9805
+
+  OOS high-vol occupancy (Viterbi): 50.1% implied cash periods
+  OOS days invested               : 49.9%
+
+  The model continues to flag known stress episodes (COVID 2020, 2022 bear
+  market) with high P(high_vol), confirming economic interpretability.
+  Shorter events (SVB March 2023) may be under-detected due to RV20 lag
+  and the 3-day hysteresis entry requirement.
+
+METHODOLOGY NOTES
+------------------------------------------------------------------------
+  • HMM and StandardScaler fit exclusively on IS (2005-02-01 → 2018-12-31).
+  • Crisis-state mapping fixed from IS; never re-identified on OOS.
+  • No rolling refits, walk-forward, or OOS retraining.
+  • Hysteresis: CASH if P(hv)≥0.60 for 3 days; INVESTED if P(hv)≤0.40 for 3 days.
+
+========================================================================

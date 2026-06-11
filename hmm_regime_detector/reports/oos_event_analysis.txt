@@ -1,0 +1,51 @@
+========================================================================
+  OOS EVENT ANALYSIS  (v1.1)
+========================================================================
+  Generated : 2026-06-09T21:41:04
+  OOS window: 2019-01-01 → 2026-06-09
+
+EVENT: 2020 COVID crisis
+------------------------------------------------------------------------
+  Start date       : 2020-02-20
+  End date         : 2020-06-30
+  Trading days     : 92
+  Avg P(high_vol)  : 0.9795
+  Avg VIX          : 39.52
+  Avg RV20         : 0.4436
+  Viterbi high-vol : 97.8% of days
+  Assessment       : Correctly identified — elevated high-vol regime occupancy
+
+EVENT: 2022 bear market
+------------------------------------------------------------------------
+  Start date       : 2022-01-03
+  End date         : 2022-12-30
+  Trading days     : 251
+  Avg P(high_vol)  : 0.9658
+  Avg VIX          : 25.62
+  Avg RV20         : 0.2372
+  Viterbi high-vol : 96.8% of days
+  Assessment       : Correctly identified — elevated high-vol regime occupancy
+
+EVENT: March 2023 SVB episode
+------------------------------------------------------------------------
+  Start date       : 2023-03-01
+  End date         : 2023-03-31
+  Trading days     : 23
+  Avg P(high_vol)  : 0.9870
+  Avg VIX          : 21.64
+  Avg RV20         : 0.1695
+  Viterbi high-vol : 100.0% of days
+  Assessment       : Correctly identified — elevated high-vol regime occupancy
+
+EVENT: 2025 tariff volatility episode
+------------------------------------------------------------------------
+  Start date       : 2025-02-03
+  End date         : 2025-05-30
+  Trading days     : 82
+  Avg P(high_vol)  : 0.7875
+  Avg VIX          : 22.97
+  Avg RV20         : 0.2566
+  Viterbi high-vol : 78.0% of days
+  Assessment       : Correctly identified — elevated high-vol regime occupancy
+
+========================================================================

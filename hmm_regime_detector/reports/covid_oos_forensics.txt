@@ -1,0 +1,40 @@
+========================================================================
+  COVID OOS FORENSICS — IS-TRAINED MODEL vs FULL-SAMPLE v1.0
+========================================================================
+  Generated : 2026-06-09T22:18:20
+  Target    : contiguous high-vol Viterbi episode containing Feb 2020
+  IS model  : fit 2005-02-01 → 2018-12-31, crisis_state=1
+
+IS-TRAINED MODEL EPISODE  (OOS Viterbi, 2019 → present)
+------------------------------------------------------------------------
+  Start date       : 2020-02-24
+  End date         : 2021-03-29
+  Trading days     : 277
+  Average VIX      : 29.86
+  Average RV20     : 0.2584
+  Average P(hv)    : 0.9988
+
+FULL-SAMPLE v1.0 COVID EPISODE  (reference)
+------------------------------------------------------------------------
+  Start date       : 2020-02-24
+  End date         : 2021-03-24
+  Trading days     : 274
+  Average VIX      : 29.97
+  Average RV20     : 0.2594
+  Average P(hv)    : 0.9576
+
+COMPARISON  (IS-trained minus full-sample)
+------------------------------------------------------------------------
+  Δ Trading days   : +3
+  Δ Average VIX    : -0.11
+  Δ Average RV20   : -0.0010
+  Δ Average P(hv)  : +0.0412
+
+INTERPRETATION
+------------------------------------------------------------------------
+  Exit differs: IS model exits on 2021-03-29 vs full-sample 2021-03-24 (+3 trading days).
+  Episode duration is essentially unchanged — IS-learned emission distributions produce the same persistence dynamics OOS.
+  Posterior confidence is similar (IS P(hv)=0.999 vs full-sample 0.958).
+  Market inputs (VIX, RV20) are identical between models; any boundary or probability difference arises purely from IS vs full-sample emission and transition parameters.
+
+========================================================================

@@ -1,0 +1,17 @@
+{
+  "generated_at": "2026-06-09T23:30:32",
+  "full_sample": {
+    "buy_hold_max_dd": 0.551894,
+    "hmm_max_dd": 0.155175
+  },
+  "is_oos": {
+    "is_buy_hold_max_dd": 0.551894,
+    "is_hmm_max_dd": 0.155175,
+    "oos_buy_hold_max_dd": 0.337173,
+    "oos_hmm_max_dd": 0.089009
+  },
+  "walk_forward": {
+    "buy_hold_max_dd": 0.337173,
+    "hmm_max_dd": 0.140518
+  }
+}

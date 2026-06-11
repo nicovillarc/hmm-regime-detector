@@ -1,0 +1,68 @@
+==============================================================
+  HMM MODEL AUDIT — INTERPRETABILITY REPORT  (v1.0.1)
+==============================================================
+  Generated : 2026-06-09T20:23:08
+  Sample    : 2005-02-01 → 2026-06-09  (5,372 days)
+  States    : normal=0, high_vol=1
+
+1. STATE MEANS  (original, non-scaled features)
+--------------------------------------------------------------
+  [Normal]
+    SPY log return    : +0.000755
+    RV20              : +0.108416
+    log(VIX)          : +2.685444
+
+  [High Volatility]
+    SPY log return    : -0.000290
+    RV20              : +0.254495
+    log(VIX)          : +3.282122
+
+2. STATE COVARIANCES  (from HMM, scaled feature space)
+--------------------------------------------------------------
+  [Normal]
+    SPY log return          RV20      log(VIX)
+    SPY log return      0.313651      0.007136     -0.052516
+              RV20      0.007136      0.093260      0.093100
+          log(VIX)     -0.052516      0.093100      0.284494
+
+  [High Volatility]
+    SPY log return          RV20      log(VIX)
+    SPY log return      2.406344      0.035139     -0.205295
+              RV20      0.035139      1.683257      0.783141
+          log(VIX)     -0.205295      0.783141      0.628396
+
+   (original-scale covariances saved in model_audit.json)
+
+3. TRANSITION MATRIX  (regime labels)
+--------------------------------------------------------------
+    Normal       → Normal       : 0.9909
+    Normal       → High Vol     : 0.0091
+    High Vol     → Normal       : 0.0186
+    High Vol     → High Vol     : 0.9814
+
+4. AVERAGE EXPECTED REGIME DURATION  (days)
+--------------------------------------------------------------
+    Normal         : 110.46 days
+    High Volatility: 53.76 days
+    Formula: 1 / (1 − P(state → same state))
+
+5–6. REGIME ASSIGNMENTS  (Viterbi-decoded)
+--------------------------------------------------------------
+    Normal          : 3,625 days  (67.48%)
+    High Volatility : 1,747 days  (32.52%)
+
+7–9. AVERAGE FEATURE VALUES BY INFERRED REGIME
+--------------------------------------------------------------
+  [Normal]
+    Avg SPY log return : +0.000759
+    Avg RV20           : 0.108296
+    Avg log(VIX)       : 2.686403
+    Avg VIX            : 14.96
+
+  [High Volatility]
+    Avg SPY log return : -0.000303
+    Avg RV20           : 0.255628
+    Avg log(VIX)       : 3.283745
+    Avg VIX            : 27.93
+
+==============================================================

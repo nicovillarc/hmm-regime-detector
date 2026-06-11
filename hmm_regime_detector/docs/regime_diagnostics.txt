@@ -1,0 +1,71 @@
+========================================================================
+  REGIME DIAGNOSTICS SUMMARY  (v1.0.2)
+========================================================================
+  Generated : 2026-06-09T20:23:08
+  Sample    : 2005-02-01 → 2026-06-09
+  Total days: 5,372  |  High-vol days: 1,747 (32.52%)
+
+QUESTION 1: Why does the model spend ~32.5% of the time in high volatility?
+------------------------------------------------------------------------
+
+  The HMM assigns the high-volatility state whenever Viterbi decoding
+  selects the crisis state — driven jointly by elevated RV20 and log(VIX).
+  Key structural reasons for the ~33% occupancy rate:
+
+  • Number of distinct high-vol episodes : 27
+  • Median episode length (trading days) : 24
+  • Longest episode                      : 2008-06-05 → 2009-12-01 (377 trading days, avg VIX 35.1)
+
+  The model's transition matrix allows extended stays in high-volatility
+  (self-transition ~98%) while still permitting re-entry after calm periods.
+  Because RV20 is a 20-day rolling measure, vol spikes create persistence:
+  once RV20 rises, it stays elevated for weeks even as VIX mean-reverts.
+
+  Posterior probability distribution:
+    Days with P(high_vol) < 0.5 : 3,608 (67.2%)
+    Days with P(high_vol) ≥ 0.5 : 1,764 (32.8%)
+
+  This indicates the model is not binary — many days carry partial
+  high-vol probability, but Viterbi hard-assigns one state per day.
+
+QUESTION 2: Which years dominate that percentage?
+------------------------------------------------------------------------
+
+  Top 5 years by high-vol occupancy: 2022 (96.0%), 2009 (91.7%), 2008 (88.1%), 2020 (86.2%), 2010 (54.4%)
+
+  Known stress years:
+    2008: 88.1% high-vol days (elevated vs 32.3% mean)
+    2011: 46.8% high-vol days (elevated vs 32.3% mean)
+    2015: 12.7% high-vol days (below average vs 32.3% mean)
+    2018: 41.0% high-vol days (elevated vs 32.3% mean)
+    2020: 86.2% high-vol days (elevated vs 32.3% mean)
+    2022: 96.0% high-vol days (elevated vs 32.3% mean)
+
+QUESTION 3: Are high-volatility periods concentrated around known stress events?
+------------------------------------------------------------------------
+
+  Yes — high-volatility episodes align strongly with known stress periods:
+    2008: 2 episode(s), 495 trading days, 88.1% annual occupancy
+    2011: 2 episode(s), 122 trading days, 46.8% annual occupancy
+    2015: 1 episode(s), 32 trading days, 12.7% annual occupancy
+    2018: 3 episode(s), 119 trading days, 41.0% annual occupancy
+    2020: 1 episode(s), 274 trading days, 86.2% annual occupancy
+    2022: 1 episode(s), 255 trading days, 96.0% annual occupancy
+
+  The longest episodes correspond to the GFC (2008–09), COVID crash (2020), and the 2022 rate-hike cycle.  However, the model also flags non-crisis periods (e.g. 2015–16, late 2018) where vol was elevated but not catastrophic.
+
+QUESTION 4: Crisis regimes or broader elevated-volatility regimes?
+------------------------------------------------------------------------
+
+  Average VIX  — Normal: 15.0  |  High Vol: 27.9
+  Average RV20 — Normal: 0.108  |  High Vol: 0.256
+  High-vol days with VIX < 25 (mild elevation): 49.9%
+
+  The high-volatility state captures broader elevated-volatility regimes, not just acute crises.  Its emission mean for RV20 (~0.25 annualised) and log(VIX) (~3.28, VIX ≈ 27) sit well above normal but below panic peaks (VIX 80+ in March 2020).  Roughly one-third of high-vol days occur at moderate VIX levels, reflecting the model's sensitivity to realised vol persistence via the RV20 feature.
+
+DECADE BREAKDOWN:
+    2005-2009: 43.3% high vol, 56.7% normal
+    2010-2019: 20.8% high vol, 79.2% normal
+    2020-present: 42.5% high vol, 57.5% normal
+
+========================================================================
